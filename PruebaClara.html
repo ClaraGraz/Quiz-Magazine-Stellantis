@@ -1,0 +1,205 @@
+<!DOCTYPE html> 
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Interactivo sobre Stellantis</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 min-h-screen flex flex-col items-center justify-center p-4">
+
+    <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-xl text-center">
+        <h1 class="text-3xl font-bold text-gray-800 mb-6">Quiz sobre Stellantis</h1>
+
+        <div id="question-container" class="mb-6">
+            <p id="question" class="text-xl text-gray-700 mb-4">Cargando pregunta...</p>
+            <div id="options" class="space-y-4"></div>
+        </div>
+
+        <div id="feedback" class="hidden mb-4">
+            <p id="feedback-message" class="text-lg font-semibold"></p>
+            <p id="feedback-icon" class="text-4xl"></p>
+        </div>
+
+        <div class="mt-4">
+            <p class="text-lg text-gray-700">Aciertos: <span id="correct-count" class="font-semibold">0</span></p>
+            <p class="text-lg text-gray-700">Fallos: <span id="incorrect-count" class="font-semibold">0</span></p>
+        </div>
+
+        <button id="next-button" onclick="loadQuestion()" class="bg-blue-500 text-white p-2 rounded-md mt-6 hidden mx-auto">Siguiente Pregunta</button>
+    </div>
+
+    <script>
+        // Contadores de aciertos y fallos
+        let correctCount = 0;
+        let incorrectCount = 0;
+        let index = 0;
+
+        // Conjunto de preguntas de opción múltiple sobre Stellantis
+
+//=======================================================================================================================================================
+//=======================================================================================================================================================
+//                                                 NO HAGAS TRAMPA, QUE LE QUITAS LA GRACIA
+//=======================================================================================================================================================
+//=======================================================================================================================================================
+
+        const questions = [
+            {
+                question: "¿En qué año se fundó Stellantis?",
+                options: ["2021", "2019", "2015", "2008"],
+                answer: "2021"
+            },
+            {
+                question: "¿Cuál es la marca más antigua de Stellantis?",
+                options: ["Peugeot", "Chrysler", "Fiat", "Jeep"],
+                answer: "Peugeot"
+            },
+            {
+                question: "¿Quién es el actual CEO de Stellantis?",
+                options: ["Carlos Tavares", "Sergio Marchionne", "Mary Barra", "Elon Musk"],
+                answer: "Carlos Tavares"
+            },
+            {
+                question: "¿Cuáles son las marcas que se fusionaron para crear Stellantis?",
+                options: [
+                    "Fiat y PSA",
+                    "Chrysler y FCA",
+                    "Fiat y Chrysler",
+                    "PSA y General Motors"
+                ],
+                answer: "Fiat y Chrysler"
+            },
+            {
+                question: "¿En qué año se completó la fusión que dio origen a Stellantis?",
+                options: ["2021", "2020", "2019", "2022"],
+                answer: "2021"
+            }
+        ];
+
+        // Función para cargar una pregunta aleatoria
+        function loadQuestion() {
+            //Borra el estilo de la respuesta
+            document.getElementById('feedback-message').classList.remove("text-green-500");
+            document.getElementById('feedback-message').classList.remove("text-red-500");
+            
+            //Ocultar botón de siguiente pregunta
+            document.getElementById('next-button').style.display = 'none';
+            
+            if (index >= questions.length) {
+                // Ocultar el contenedor de preguntas
+                document.getElementById('question-container').innerHTML = `
+                    <h2 class="text-2xl font-bold text-green-600 mb-4">🎉 ¡Enhorabuena por completar el quiz! 🎉</h2>
+                    <p class="text-lg text-gray-700 mb-2">Aciertos: <strong>${correctCount}</strong></p>
+                    <p class="text-lg text-gray-700 mb-4">Fallos: <strong>${incorrectCount}</strong></p>
+                    <p class="text-lg text-gray-700 mb-4">¡Gracias por participar! Síguenos en nuestras redes:</p>
+                    <div class="flex justify-center space-x-4 mb-4">
+                        <a href="https://twitter.com" target="_blank" class="text-blue-500 hover:underline">Twitter</a>
+                        <a href="https://instagram.com" target="_blank" class="text-pink-500 hover:underline">Instagram</a>
+                        <a href="https://facebook.com" target="_blank" class="text-blue-700 hover:underline">Facebook</a>
+                    </div>
+                `;
+
+    //============================================================================================================================================
+    //    PARA EL LINK o LINKS FINALES, PONER EL LINK EN "href". SI SE QUIEREN ANADIR MAS LINKS, COPIAR LA ETIQUETA "a" Y PONER UN NUEVO LINK
+    //============================================================================================================================================
+
+                // Ocultar feedback y contadores
+                document.getElementById('feedback').style.display = 'none';
+                document.querySelector('.mt-4').style.display = 'none';
+                
+                // Ocultar el botón de siguiente pregunta
+                document.querySelector('button').style.display = 'none';
+                return;
+            }
+            // Clonar la pregunta actual y sus opciones
+            const currentQuestion = { ...questions[index] };
+            const shuffledOptions = [...currentQuestion.options].sort(() => Math.random() - 0.5);
+
+            // Mostrar la pregunta
+            document.getElementById('question').textContent = currentQuestion.question;
+
+            // Mostrar las opciones
+            const optionsContainer = document.getElementById('options');
+            optionsContainer.innerHTML = '';
+
+            shuffledOptions.forEach(option => {
+                const button = document.createElement('button');
+                button.textContent = option;
+                button.className = "w-full p-3 border rounded-md bg-blue-100 hover:bg-blue-200";
+                button.onclick = () => checkAnswer(button, option, currentQuestion.answer);
+                optionsContainer.appendChild(button);
+            });
+
+            // Ocultar feedback anterior
+            document.getElementById('feedback').classList.add('hidden');
+            index ++;
+        }
+
+        // Función para verificar la respuesta
+        function checkAnswer(button, selectedOption, correctAnswer) {
+            const buttons = document.querySelectorAll('#options button');
+            // Deshabilitar todas las opciones después de elegir una
+            buttons.forEach(btn => {
+                btn.disabled = true; // Deshabilitar los botones
+                btn.classList.remove('hover:bg-blue-200');
+            });
+
+            if (selectedOption === correctAnswer) {
+                button.classList.add('bg-green-500', 'text-white');
+            } else {
+                button.classList.add('bg-red-500', 'text-white');
+
+                const correctButton = Array.from(buttons).find(btn => btn.textContent === correctAnswer);
+                if (correctButton) {
+                    correctButton.classList.add('bg-green-500', 'text-white');
+                }
+            }
+
+            // Mostrar el botón de siguiente pregunta
+            document.getElementById('next-button').style.display = 'block';
+            
+            const feedbackMessage = document.getElementById('feedback-message');
+            const feedbackIcon = document.getElementById('feedback-icon');
+            const correctCountElement = document.getElementById('correct-count');
+            const incorrectCountElement = document.getElementById('incorrect-count');
+
+            if (selectedOption === correctAnswer) {
+                correctCount++;
+                feedbackMessage.textContent = "¡Correcto!";
+                feedbackIcon.textContent = "🎉";
+                feedbackMessage.classList.add("text-green-500");
+            } else {
+                incorrectCount++;
+                feedbackMessage.textContent = "¡Incorrecto!";
+                feedbackIcon.textContent = "😞";
+                feedbackMessage.classList.add("text-red-500");
+            }
+
+            correctCountElement.textContent = correctCount;
+            incorrectCountElement.textContent = incorrectCount;
+
+            // Mostrar el feedback
+            document.getElementById('feedback').classList.remove('hidden');
+        }
+
+        function shuffleArray(array) {
+            return array
+                .map(value => ({ value, sort: Math.random() }))
+                .sort((a, b) => a.sort - b.sort)
+                .map(({ value }) => value);
+        }
+
+        // Cargar la primera pregunta al iniciar
+        loadQuestion();
+    </script>
+
+</body>
+
+</html>
