@@ -7,19 +7,24 @@
     <title>Quiz Interactivo sobre Stellantis</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body {
+    body {
             font-family: 'Arial', sans-serif;
+            background-image: url('img/Fondo1.jpeg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
         }
-        /* Cambiar fondo para pantallas pequeñas (por ejemplo, menos de 768px) */
+    
         @media (max-width: 768px) {
             body {
                 background-image: url('img/FondoMovil.jpeg');
             }
         }
     </style>
+
 </head>
 
-<body class="bg-cover bg-center min-h-screen flex flex-col items-center justify-center p-4" style="background-image: url('img/Fondo1.jpeg');">
+<body class="bg-cover bg-center min-h-screen flex flex-col items-center justify-center p-4">
 
     <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-xl text-center">
         <h1 class="text-3xl font-bold text-gray-800 mb-6">Quiz sobre Stellantis</h1>
@@ -192,6 +197,7 @@
 </body>
 
 </html>
+
 
 
 
